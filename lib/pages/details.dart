@@ -14,6 +14,7 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  late String id;
   late File image;
   final imageStorage = ImageStorage();
   int count = 1;
@@ -222,7 +223,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          final id = randomAlphaNumeric(9);
+                          id = randomAlphaNumeric(9);
                           final authSrevices = AuthServices();
                           final firestore = FirebaseFirestore.instance;
                           final user = await authSrevices.getCurrentUser();
@@ -237,7 +238,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                 "Price": widget.ds["Price"],
                                 "Tickets": (count.toString()),
                                 "Location": widget.ds["Location"],
-                                "Date":widget.ds["Date"],
+                                "Date": widget.ds["Date"],
                               });
 
                           //for image Storage

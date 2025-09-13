@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class BookingPage extends StatefulWidget {
   const BookingPage({super.key});
+  
 
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -43,14 +44,13 @@ class _BookingPageState extends State<BookingPage> {
                 itemCount: snapshot.data?.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot ds = snapshot.data!.docs[index];
-                  
+
                   return Container(
                     width: MediaQuery.of(context).size.width,
-                    
+
                     margin: EdgeInsets.only(bottom: 10),
                     padding: EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
-                      
                       borderRadius: BorderRadius.horizontal(
                         left: Radius.circular(20),
                         right: Radius.circular(20),
@@ -74,31 +74,50 @@ class _BookingPageState extends State<BookingPage> {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          
+
                           children: [
-                            // FutureBuilder(future: imageStorage.uploadImage(id), builder: (context, imageSnapshot) {
-                            //   if(imageSnapshot.hasData){
-                            //     Image.asset(
-                            //     imageSnapshot.data,
-
-                            //     )
-                            //   }
-
-                            // },)
-                            //,
-                            SizedBox(
-                              width: 130,
-                              height: 100,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  "images/concert3.jpg",
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
+                            FutureBuilder(
+                              future: imageStorage.uploadImage(uid),
+                              builder: (context, imageSnapshot) {
+                                if (imageSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const SizedBox(
+                                    height: 200,
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                } else if (snapshot.hasError ||
+                                    snapshot.hasError ||
+                                    !snapshot.hasData) {
+                                  print(
+                                    "Error loading image for ID ${ds.id}: ${imageSnapshot.error}",
+                                  );
+                                  return const Icon(
+                                    Icons.broken_image,
+                                    size: 100,
+                                  );
+                                } else if (imageSnapshot.hasData) {
+                                  return SizedBox(
+                                    width: 130,
+                                    height: 100,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.file(
+                                        imageSnapshot.data!,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Icon(
+                                    Icons.photo_size_select_actual_rounded,
+                                  );
+                                }
+                              },
                             ),
+
                             Column(
-                              
                               children: [
                                 Center(
                                   child: Text(
@@ -108,7 +127,7 @@ class _BookingPageState extends State<BookingPage> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 4,),
+                                SizedBox(height: 4),
                                 Row(
                                   children: [
                                     Icon(
@@ -124,7 +143,7 @@ class _BookingPageState extends State<BookingPage> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 5,),
+                                SizedBox(height: 5),
                                 Row(
                                   children: [
                                     Icon(Icons.group, color: Colors.blue),
