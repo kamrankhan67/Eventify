@@ -77,7 +77,7 @@ class _BookingPageState extends State<BookingPage> {
 
                           children: [
                             FutureBuilder(
-                              future: imageStorage.uploadImage(uid),
+                              future: imageStorage.uploadImage(ds["Id"]),
                               builder: (context, imageSnapshot) {
                                 if (imageSnapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -105,7 +105,7 @@ class _BookingPageState extends State<BookingPage> {
                                       borderRadius: BorderRadius.circular(10),
                                       child: Image.file(
                                         imageSnapshot.data!,
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   );

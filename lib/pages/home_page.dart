@@ -6,6 +6,7 @@ import 'package:event_booking_app/pages/details.dart';
 import 'package:event_booking_app/services/auth_services.dart';
 import 'package:event_booking_app/services/firebase_database.dart';
 import 'package:event_booking_app/services/image_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   Stream<QuerySnapshot>? eventStream;
   late String uid;
 
-
   @override
   void initState() {
     super.initState();
@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> onLoading() async {
     try {
       eventStream = await DatabaseFirestore().getEvents();
+      //userName = (await AuthServices().getCurrentUserName())!;
       setState(() {});
     } catch (e) {
       print("Error loading events: $e");
@@ -211,8 +212,8 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  "Hello, Kamran",
+                Text(
+                "Hello , Kamran",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(height: 10),
@@ -260,17 +261,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const SizedBox(width: 30),
-                      _buildCategory(
-                        context,
-                        "images/clothes.png",
-                        "Clothing",
-                      ),
+                      _buildCategory(context, "images/clothes.png", "Clothing"),
                       const SizedBox(width: 30),
                       _buildCategory(
                         context,
                         "images/confetti.png",
                         "Festivals",
-                        onTap:(){}
+                        onTap: () {},
                       ),
                       const SizedBox(width: 20),
                     ],

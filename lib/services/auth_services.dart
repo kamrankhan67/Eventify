@@ -52,4 +52,8 @@ class AuthServices {
   Future<User> getCurrentUser() async {
     return _auth.currentUser!;
   }
+
+  Future<String?> getCurrentUserName() async {
+    return _auth.currentUser!.displayName;
+  }
 }
