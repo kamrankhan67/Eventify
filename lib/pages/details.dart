@@ -235,8 +235,9 @@ class _DetailsPageState extends State<DetailsPage> {
                               .set({
                                 "Name": widget.ds["Name"],
                                 "Price": widget.ds["Price"],
-                                "Tickets": count,
+                                "Tickets": (count.toString()),
                                 "Location": widget.ds["Location"],
+                                "Date":widget.ds["Date"],
                               });
 
                           //for image Storage
