@@ -6,7 +6,6 @@ import 'package:event_booking_app/pages/details.dart';
 import 'package:event_booking_app/services/auth_services.dart';
 import 'package:event_booking_app/services/firebase_database.dart';
 import 'package:event_booking_app/services/image_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -131,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          formatedDate ?? "Unknown Date",
+                          formatedDate,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w900,
