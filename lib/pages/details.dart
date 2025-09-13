@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_booking_app/components/scaffold_message.dart';
 import 'package:event_booking_app/services/auth_services.dart';
 import 'package:event_booking_app/services/image_storage.dart';
 import 'package:flutter/material.dart';
@@ -239,7 +240,15 @@ class _DetailsPageState extends State<DetailsPage> {
                                 "Tickets": (count.toString()),
                                 "Location": widget.ds["Location"],
                                 "Date": widget.ds["Date"],
-                                "Id":id
+                                "Id": id,
+                              })
+                              .then((value) {
+                                final scfMdg = ScaffoldMessage();
+                                scfMdg.message(
+                                  context,
+                                  "Booked Successfully",
+                                  Colors.green,
+                                );
                               });
 
                           //for image Storage

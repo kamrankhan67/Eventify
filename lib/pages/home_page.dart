@@ -8,6 +8,7 @@ import 'package:event_booking_app/services/firebase_database.dart';
 import 'package:event_booking_app/services/image_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -57,7 +58,13 @@ class _HomePageState extends State<HomePage> {
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             DocumentSnapshot ds = snapshot.data!.docs[index];
-            return GestureDetector(
+            final String inputDate = ds["Date"];
+            DateTime parsedDate = DateTime.parse(inputDate);
+            String formatedDate = DateFormat('MMM,dd').format(parsedDate);
+            DateTime currentDate = DateTime.now();
+            bool hasPassed = currentDate.isAfter(parsedDate);
+
+            return hasPassed?Container(): GestureDetector(
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => DetailsPage(ds: ds)),
@@ -124,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          ds["Date"] ?? "Unknown Date",
+                          formatedDate ?? "Unknown Date",
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w900,
@@ -213,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                "Hello , Kamran",
+                  "Hello , Kamran",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(height: 10),
