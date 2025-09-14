@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_booking_app/admin_panel/upload_event.dart';
+import 'package:event_booking_app/pages/categories.dart';
 import 'package:event_booking_app/pages/details.dart';
-import 'package:event_booking_app/services/auth_services.dart';
 import 'package:event_booking_app/services/firebase_database.dart';
 import 'package:event_booking_app/services/image_storage.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> onLoading() async {
     try {
       eventStream = await DatabaseFirestore().getEvents();
-      //userName = (await AuthServices().getCurrentUserName())!;
       setState(() {});
     } catch (e) {
       print("Error loading events: $e");
@@ -63,117 +61,122 @@ class _HomePageState extends State<HomePage> {
             DateTime currentDate = DateTime.now();
             bool hasPassed = currentDate.isAfter(parsedDate);
 
-            return hasPassed?Container(): GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DetailsPage(ds: ds)),
-              ),
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.only(right: 20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: FutureBuilder<File?>(
-                            future: imageStorage.uploadImage(ds.id),
-                            builder: (context, imageSnapshot) {
-                              if (imageSnapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const SizedBox(
-                                  height: 200,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              } else if (imageSnapshot.hasError ||
-                                  !imageSnapshot.hasData ||
-                                  imageSnapshot.data == null) {
-                                print(
-                                  "Error loading image for ID ${ds.id}: ${imageSnapshot.error}",
-                                );
-                                return const Icon(
-                                  Icons.broken_image,
-                                  size: 100,
-                                );
-                              } else {
-                                return Image.file(
-                                  imageSnapshot.data!,
-                                  width: double.infinity,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    print("Image file error: $error");
-                                    return const Icon(
-                                      Icons.broken_image,
-                                      size: 100,
-                                    );
+            return hasPassed
+                ? Container()
+                : GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailsPage(ds: ds),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.only(right: 20),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: FutureBuilder<File?>(
+                                  future: imageStorage.uploadImage(ds.id),
+                                  builder: (context, imageSnapshot) {
+                                    if (imageSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const SizedBox(
+                                        height: 200,
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    } else if (imageSnapshot.hasError ||
+                                        !imageSnapshot.hasData ||
+                                        imageSnapshot.data == null) {
+                                      print(
+                                        "Error loading image for ID ${ds.id}: ${imageSnapshot.error}",
+                                      );
+                                      return const Icon(
+                                        Icons.broken_image,
+                                        size: 100,
+                                      );
+                                    } else {
+                                      return Image.file(
+                                        imageSnapshot.data!,
+                                        width: double.infinity,
+                                        height: 200,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              print("Image file error: $error");
+                                              return const Icon(
+                                                Icons.broken_image,
+                                                size: 100,
+                                              );
+                                            },
+                                      );
+                                    }
                                   },
-                                );
-                              }
-                            },
-                          ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              margin: const EdgeInsets.only(left: 10, top: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                formatedDate,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ds["Name"] ?? "Unnamed Event",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: Text(
+                                "\$${ds["Price"] ?? '0'}",
+                                style: const TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        margin: const EdgeInsets.only(left: 10, top: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on_outlined, size: 16),
+                            Text(ds["Location"] ?? "Unknown Location"),
+                          ],
                         ),
-                        child: Text(
-                          formatedDate,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ds["Name"] ?? "Unnamed Event",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: Text(
-                          "\$${ds["Price"] ?? '0'}",
-                          style: const TextStyle(
-                            color: Colors.deepPurple,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on_outlined, size: 16),
-                      Text(ds["Location"] ?? "Unknown Location"),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            );
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  );
           },
         );
       },
@@ -207,13 +210,6 @@ class _HomePageState extends State<HomePage> {
                     const Text(
                       "Lahore, Pakistan",
                       style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        final auth = AuthServices();
-                        auth.signOut();
-                      },
-                      child: const Icon(Icons.logout),
                     ),
                   ],
                 ),
@@ -251,29 +247,52 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 15),
                 SizedBox(
-                  height: 90,
+                  height: 100,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
                       _buildCategory(
                         context,
                         "images/microphone.png",
+                        "110",
+                        "65",
                         "Music",
+
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const UploadEvent(),
+                            builder: (context) => Categories(eventName: "Music"),
                           ),
                         ),
                       ),
                       const SizedBox(width: 30),
-                      _buildCategory(context, "images/clothes.png", "Clothing"),
+                      _buildCategory(
+                        context,
+                        "images/clothes.png",
+                        "110",
+                        "65",
+                        "Clothing",
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Categories(eventName: "Clothing"),
+                          ),
+                        ),
+                      ),
                       const SizedBox(width: 30),
                       _buildCategory(
                         context,
                         "images/confetti.png",
+                        "110",
+                        "65",
                         "Festivals",
-                        onTap: () {},
+
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Categories(eventName: "Festivals"),
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 20),
                     ],
@@ -312,9 +331,13 @@ class _HomePageState extends State<HomePage> {
   Widget _buildCategory(
     BuildContext context,
     String imagePath,
+    String width,
+    String height,
     String label, {
     VoidCallback? onTap,
   }) {
+    final wdth = double.parse(width);
+    final hgt = double.parse(height);
     return Material(
       elevation: 10,
       color: Colors.grey,
@@ -322,6 +345,8 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
+          width: wdth,
+          height: hgt,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
             color: Colors.white,
