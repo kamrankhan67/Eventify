@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_booking_app/pages/categories.dart';
 import 'package:event_booking_app/pages/details.dart';
+import 'package:event_booking_app/services/auth_services.dart';
 import 'package:event_booking_app/services/firebase_database.dart';
 import 'package:event_booking_app/services/image_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,25 @@ class _HomePageState extends State<HomePage> {
   final imageStorage = ImageStorage();
   Stream<QuerySnapshot>? eventStream;
   late String uid;
+  String name = "";
+  getUserData() async {
+    final String uid = await AuthServices().getCurrentUserUid();
+    final snapshot = await DatabaseFirestore().getUserData(uid);
+
+    if (snapshot.exists) {
+      if (!mounted) return;
+      setState(() {
+        name = snapshot['name'];
+        ;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     onLoading();
+    getUserData();
   }
 
   Future<void> onLoading() async {
@@ -215,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  "Hello , Kamran",
+                  "Hello, $name",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(height: 10),
@@ -261,7 +276,8 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Categories(eventName: "Music"),
+                            builder: (context) =>
+                                Categories(eventName: "Music"),
                           ),
                         ),
                       ),
@@ -275,7 +291,8 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Categories(eventName: "Clothing"),
+                            builder: (context) =>
+                                Categories(eventName: "Clothing"),
                           ),
                         ),
                       ),
@@ -290,7 +307,8 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Categories(eventName: "Festivals"),
+                            builder: (context) =>
+                                Categories(eventName: "Festivals"),
                           ),
                         ),
                       ),

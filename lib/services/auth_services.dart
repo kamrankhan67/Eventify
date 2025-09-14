@@ -56,4 +56,8 @@ class AuthServices {
   Future<String?> getCurrentUserName() async {
     return _auth.currentUser!.displayName;
   }
+
+  Future<void> deleteAccount() async {
+    return await _auth.currentUser!.delete();
+  }
 }
