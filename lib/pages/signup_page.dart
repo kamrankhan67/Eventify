@@ -39,7 +39,7 @@ class _SignupPageState extends State<SignupPage> {
             physics: BouncingScrollPhysics(),
             child: Column(
               children: [
-                SizedBox(height: 70),
+                Image.asset("images/app_logo_bgremoved.png",width: 170,),
                 Text(
                   "Unlock the future of",
                   style: TextStyle(

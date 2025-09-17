@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Column(
               children: [
-                SizedBox(height: 40),
+                Image.asset("images/app_logo_bgremoved.png",width: 200,),
                 Text(
                   "Unlock the future of",
                   style: TextStyle(
