@@ -17,6 +17,7 @@ class _TicketsState extends State<Tickets> {
 
   onTheLoad() async {
     allEvents = await DatabaseFirestore().getAdminEvents(uid);
+    setState(() {});
   }
 
   @override
@@ -28,8 +29,16 @@ class _TicketsState extends State<Tickets> {
   Widget allAdminEvents() {
     return StreamBuilder(
       stream: allEvents,
-      builder: (context, snapshot) {
-        return snapshot.data==null?Container(): ListView.builder(
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          print("Error in StreamBuilder: ${snapshot.error}");
+          return const Center(child: Text("Error loading events"));
+        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text("No events found"));
+        }
+        return ListView.builder(
           shrinkWrap: true,
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
@@ -53,9 +62,17 @@ class _TicketsState extends State<Tickets> {
                     ),
                   ),
                   //name
-                  Text(
-                    ds['Name'],
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Text(
+                        "Name: ",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        ds['Name'],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                   //date
                   Row(
@@ -63,11 +80,6 @@ class _TicketsState extends State<Tickets> {
                       Text(
                         "Date: ",
                         style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Icon(
-                        Icons.calendar_today_outlined,
-                        color: Colors.blue,
-                        size: 20,
                       ),
                       Text(ds['Date'])
                     ],
@@ -79,7 +91,7 @@ class _TicketsState extends State<Tickets> {
                       "Location: ",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(ds[Location]),
+                    Text(ds["Location"]),
                   ]),
                   //total tickets
                   Row(children: [
@@ -87,7 +99,7 @@ class _TicketsState extends State<Tickets> {
                       "Total Tickets: ",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(ds['Total_Tickets']),
+                    Text(ds['Total_Tickets'].toString()),
                   ]),
 
                   //sold tickets
@@ -96,7 +108,7 @@ class _TicketsState extends State<Tickets> {
                       "Sold Tickets: ",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(ds['Booked_Tickets']),
+                    Text(ds['Booked_Tickets'].toString()),
                   ]),
                   //revenue
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -105,10 +117,9 @@ class _TicketsState extends State<Tickets> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Total Amount",
+                      "${(double.parse(ds['Booked_Tickets'])) * (double.parse(ds['Price']))} \$",
                       style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text("${((double.parse(ds['Booked_Tickets']))*(double.parse(ds["Price"])))} \$"),
+                    )
                   ]),
                 ],
               ),
@@ -122,15 +133,12 @@ class _TicketsState extends State<Tickets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Published Events"),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-      ),
-      body: Column(
-        children:[allAdminEvents()],
-      ),
-    );
+        appBar: AppBar(
+          title: Text("Published Events"),
+          backgroundColor: Colors.deepPurple,
+          foregroundColor: Colors.white,
+          centerTitle: true,
+        ),
+        body: allAdminEvents());
   }
 }
