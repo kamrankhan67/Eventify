@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_booking_app/services/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 
 class Tickets extends StatefulWidget {
   const Tickets({super.key});
@@ -45,8 +44,9 @@ class _TicketsState extends State<Tickets> {
             DocumentSnapshot ds = snapshot.data!.docs[index];
             return Container(
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 199, 199, 199),
-                  borderRadius: BorderRadius.circular(20)),
+                  color: const Color.fromARGB(255, 240, 240, 240),
+                  boxShadow: [BoxShadow(offset: Offset(3, 3),blurRadius: 6,spreadRadius: 2,color:Colors.black.withOpacity(0.4), ),],
+                  borderRadius: BorderRadius.circular(20)), 
               margin: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Column(

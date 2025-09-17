@@ -79,32 +79,35 @@ class _UploadEventState extends State<UploadEvent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Upload Event"),
+      backgroundColor: Colors.deepPurple,foregroundColor: Colors.white,),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20),
+          color: Colors.white,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 20),
-              Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.arrow_back, size: 25)),
-                  SizedBox(width: 60),
-                  Text(
-                    "Upload Event",
-                    style: TextStyle(
-                      color: Colors.deepPurpleAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     GestureDetector(
+              //         onTap: () {
+              //           Navigator.pop(context);
+              //         },
+              //         child: Icon(Icons.arrow_back, size: 25)),
+              //     SizedBox(width: 60),
+              //     Text(
+              //       "Upload Event",
+              //       style: TextStyle(
+              //         color: Colors.deepPurpleAccent,
+              //         fontWeight: FontWeight.bold,
+              //         fontSize: 20,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(height: 15),
               selectedImage != null
                   ? Center(

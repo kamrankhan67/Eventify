@@ -1,3 +1,5 @@
+import 'package:event_booking_app/admin_panel/admin_profile.dart';
+import 'package:event_booking_app/admin_panel/delete.dart';
 import 'package:event_booking_app/admin_panel/tickets.dart';
 import 'package:event_booking_app/admin_panel/upload_event.dart';
 import 'package:flutter/material.dart';
@@ -16,117 +18,171 @@ class _AdminHomePageState extends State<AdminHomePage> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AdminProfile(),
+                    ));
+              },
+              child: Icon(
+                Icons.person_2_rounded,
+                color: Colors.white,
+                size: 30,
+              )),
           title: Text(
             "Admin Home ",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.deepPurple,
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              //upload Events
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
+        body: Container(
+          color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                //upload Events
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => UploadEvent(),
-                      ));
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 4,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.height / 4,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.shade400),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.upload,
-                        color: Colors.deepPurple,
-                        size: 50,
-                      ),
-                      Text(
-                        "Upload Event",
-                        style: TextStyle(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // shadow color
+                          spreadRadius: 2, // how much it spreads
+                          blurRadius: 6, // how soft it looks
+                          offset: Offset(
+                              3, 3), // horizontal, vertical shadow position
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.upload,
+                          color: Colors.deepPurple,
+                          size: 50,
+                        ),
+                        Text(
+                          "Upload Event",
+                          style: TextStyle(
                             color: const Color.fromARGB(255, 51, 51, 51),
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              // Listed Events
+                // Listed Events
 
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Tickets(),
-                      ));
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 4,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Tickets(),
+                        ));
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.height / 4,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.shade400),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.event_available_outlined,
-                        color: Colors.deepPurple,
-                        size: 50,
-                      ),
-                      Text(
-                        "All Events",
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 51, 51, 51),
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // shadow color
+                          spreadRadius: 2, // how much it spreads
+                          blurRadius: 6, // how soft it looks
+                          offset: Offset(
+                              3, 3), // horizontal, vertical shadow position
+                        ),
+                      ],
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.event_available_outlined,
+                          color: Colors.deepPurple,
+                          size: 50,
+                        ),
+                        Text(
+                          "All Events",
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 51, 51, 51),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              //Total Profits per Event.
+                //Total Profits per Event.
 
-              Container(
-                width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 4,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    border: Border.all(width: 1),
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey.shade400),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.delete_forever,
-                      color: Colors.red,
-                      size: 50,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Delete(),
+                        ));
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.height / 4,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // shadow color
+                          spreadRadius: 2, // how much it spreads
+                          blurRadius: 6, // how soft it looks
+                          offset: Offset(
+                              3, 3), // horizontal, vertical shadow position
+                        ),
+                      ],
                     ),
-                    Text(
-                      "Delete Event",
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 51, 51, 51),
-                          fontWeight: FontWeight.bold),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.delete_forever,
+                          color: Colors.red,
+                          size: 50,
+                        ),
+                        Text(
+                          "Delete Event",
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 51, 51, 51),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
