@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_booking_app/admin_panel/admin_page.dart';
 import 'package:event_booking_app/components/error_dialogbox.dart';
 import 'package:event_booking_app/components/myButton.dart';
 import 'package:event_booking_app/components/mytextfeld.dart';
 import 'package:event_booking_app/pages/bottom_navbar.dart';
 import 'package:event_booking_app/pages/signup_page.dart';
 import 'package:event_booking_app/services/auth_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,9 +17,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isChecked = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   final _authServices = AuthServices();
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Column(
               children: [
-                Image.asset("images/app_logo_bgremoved.png",width: 200,),
+                Image.asset(
+                  "images/app_logo_bgremoved.png",
+                  width: 200,
+                ),
                 Text(
                   "Unlock the future of",
                   style: TextStyle(
@@ -77,26 +85,72 @@ class _LoginPageState extends State<LoginPage> {
                   hint: "Enter your Password",
                   obscure: true,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Continue an Admin",
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                        value: isChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (!isChecked) {
+                              isChecked = true;
+                            } else {
+                              isChecked = false;
+                            }
+                          });
+                        }),
+                  ],
+                ),
                 Mybutton(
                   text: "Log In",
-                  ontap: () async{
-                    
+                  ontap: () async {
                     try {
-                      await _authServices.signInWithEmailAndPassword(
-                        emailController.text,
-                        passController.text,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomNavbar()),
-                      );
+                      UserCredential user =
+                          await _authServices.signInWithEmailAndPassword(
+                              emailController.text,
+                              passController.text,
+                              isChecked);
+                      String uid = user.user!.uid;
+                      if (!isChecked) {
+                        DocumentSnapshot userDoc = await _firebaseFirestore
+                            .collection("Users")
+                            .doc(uid)
+                            .get();
+                        if (userDoc.exists) {
+                          await Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BottomNavbar()),
+                          );
+                        } else {
+                          showErrorDialogBox(context, "You dont have an account, Please Sign Up first");
+                        }
+                      } else {
+                        DocumentSnapshot userDoc = await _firebaseFirestore
+                            .collection("Admin")
+                            .doc(uid)
+                            .get();
+                        if (userDoc.exists) {
+                          await Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AdminHomePage()),
+                          );
+                        }
+                      }
                     } on Exception catch (e) {
                       showErrorDialogBox(context, e.toString());
                     }
                   },
                 ),
-
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

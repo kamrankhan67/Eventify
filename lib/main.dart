@@ -1,6 +1,7 @@
 
+import 'package:event_booking_app/admin_panel/tickets.dart';
 import 'package:event_booking_app/firebase_options.dart';
-import 'package:event_booking_app/pages/signup_page.dart';
+import 'package:event_booking_app/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:SignupPage(),
+      home:LoginPage(),
     );
   }
 }

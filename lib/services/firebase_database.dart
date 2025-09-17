@@ -8,6 +8,15 @@ class DatabaseFirestore {
         .set(userInfo);
   }
 
+  Future assignEventToAdmin(Map<String,dynamic> userInfo,String adminId, String eventId) async {
+    return await FirebaseFirestore.instance
+        .collection("Admin")
+        .doc(adminId)
+        .collection("Published Events")
+        .doc(eventId)
+        .set(userInfo);
+  }
+
   Future<Stream<QuerySnapshot>> getEvents() async {
     return await FirebaseFirestore.instance.collection("Events").snapshots();
   }
@@ -43,5 +52,13 @@ class DatabaseFirestore {
 
   Future<DocumentSnapshot> getUserData(String id) async {
     return FirebaseFirestore.instance.collection("Users").doc(id).get();
+  }
+
+  Future<Stream<QuerySnapshot>> getAdminEvents(String id) async{
+    return await FirebaseFirestore.instance
+        .collection("Admin")
+        .doc(id)
+        .collection("Published Events")
+        .snapshots();
   }
 }

@@ -8,8 +8,10 @@ class AuthServices {
   Future<UserCredential> signInWithEmailAndPassword(
     String email,
     String pass,
+    bool isChecked
   ) async {
     try {
+      
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: pass,
@@ -24,16 +26,29 @@ class AuthServices {
     String email,
     String password,
     String name,
+    bool isChecked,
+    bool isVerified,
   ) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      await _firestore.collection("Users").doc(userCredential.user!.uid).set({
+      if(!isChecked){
+        await _firestore.collection("Users").doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
         'email': email,
         'name': name,
+        
       });
+      }else{
+        await _firestore.collection("Admin").doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'email': email,
+        'name': name,
+        'isChecked':isChecked,
+        'isVerified':isVerified
+      });
+      }
 
       return userCredential;
     } on FirebaseAuthException catch (e) {

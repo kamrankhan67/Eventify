@@ -149,7 +149,6 @@ class _DetailsPageState extends State<DetailsPage> {
                   SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-
                     children: [
                       Text(
                         "Number of Tickets",
@@ -235,21 +234,24 @@ class _DetailsPageState extends State<DetailsPage> {
                               .collection("Bookings")
                               .doc(id)
                               .set({
-                                "Name": widget.ds["Name"],
-                                "Price": widget.ds["Price"],
-                                "Tickets": (count.toString()),
-                                "Location": widget.ds["Location"],
-                                "Date": widget.ds["Date"],
-                                "Id": id,
-                              })
-                              .then((value) {
-                                final scfMdg = ScaffoldMessage();
-                                scfMdg.message(
-                                  context,
-                                  "Booked Successfully",
-                                  Colors.green,
-                                );
-                              });
+                            "Name": widget.ds["Name"],
+                            "Price": widget.ds["Price"],
+                            "Tickets": (count.toString()),
+                            "Location": widget.ds["Location"],
+                            "Date": widget.ds["Date"],
+                            "Id": id,
+                          }).then((value) {
+                            final scfMdg = ScaffoldMessage();
+                            scfMdg.message(
+                              context,
+                              "Booked Successfully",
+                              Colors.green,
+                            );
+                          });
+
+                         await  firestore.collection("Events").doc(widget.ds['uid']).update({
+                            'Booked_Tickets':(count).toString()
+                          });
 
                           //for image Storage
 
@@ -257,7 +259,6 @@ class _DetailsPageState extends State<DetailsPage> {
                         },
                         child: Container(
                           alignment: Alignment.center,
-
                           width: 150,
                           height: 50,
                           decoration: BoxDecoration(

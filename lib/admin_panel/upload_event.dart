@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:event_booking_app/components/myButton.dart';
 import 'package:event_booking_app/components/scaffold_message.dart';
 import 'package:event_booking_app/components/upload_event_textfield.dart';
+import 'package:event_booking_app/services/auth_services.dart';
 import 'package:event_booking_app/services/firebase_database.dart';
 import 'package:event_booking_app/services/image_storage.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _UploadEventState extends State<UploadEvent> {
   final databaseFirestore = DatabaseFirestore();
   final ImagePicker _imagePicker = ImagePicker();
   final TextEditingController eventNameController = TextEditingController();
+  final TextEditingController totalNoOfTicketsController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController ticketPriceController = TextEditingController();
   final List<String> categories = ["Clothing", "Festivals", "Music"];
@@ -152,6 +154,17 @@ class _UploadEventState extends State<UploadEvent> {
               ),
               SizedBox(height: 10),
               Text(
+                "Total No of Tickets",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5),
+              UploadEventTextfield(
+                controller: totalNoOfTicketsController,
+                hint: "Total no of Ticket",
+                height: 40,
+              ),
+              SizedBox(height: 10),
+              Text(
                 "Location",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
@@ -267,6 +280,9 @@ class _UploadEventState extends State<UploadEvent> {
                       'Date': DateFormat('yyyy-MM-dd').format(selectedDate),
                       'Time': formatTimeOfDay(selectedTime),
                       'Location': locationController.text,
+                      'Total_Tickets':totalNoOfTicketsController.text,
+                      'uid':id,
+                      'Booked_Tickets':''
                     };
 
                     await databaseFirestore.addEvent(uploadEvent, id).then((
@@ -278,6 +294,8 @@ class _UploadEventState extends State<UploadEvent> {
                         Colors.green,
                       );
                     });
+                    String uid=await AuthServices().getCurrentUserUid();
+                    await databaseFirestore.assignEventToAdmin(uploadEvent,uid,id);
 
                     setState(() {
                       eventNameController.text = "";

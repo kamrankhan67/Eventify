@@ -15,6 +15,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  bool isChecked = false;
+  bool isVerified = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -34,12 +36,14 @@ class _SignupPageState extends State<SignupPage> {
               child: Image.asset("images/signup_wallpaper2.png"),
             ),
           ),
-
           SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Column(
               children: [
-                Image.asset("images/app_logo_bgremoved.png",width: 170,),
+                Image.asset(
+                  "images/app_logo_bgremoved.png",
+                  width: 150,
+                ),
                 Text(
                   "Unlock the future of",
                   style: TextStyle(
@@ -48,7 +52,6 @@ class _SignupPageState extends State<SignupPage> {
                     color: Colors.black,
                   ),
                 ),
-
                 Text(
                   "Event Booking App",
                   style: TextStyle(
@@ -87,30 +90,67 @@ class _SignupPageState extends State<SignupPage> {
                   hint: "Enter your Password",
                   obscure: true,
                 ),
-                SizedBox(height: 20),
-                Mybutton(
-                  text: "Sign Up",
-                  ontap: () async {
-                    try {
-                      await _authServices.signUpWithEmailAndPassword(
-                        emailController.text,
-                        passController.text,
-                        nameController.text,
-                      );
-                      scaffoldMessage.message(
-                        context,
-                        "Registered Successfully!!!",
-                        Colors.green,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomNavbar()),
-                      );
-                    } on Exception catch (e) {
-                      showErrorDialogBox(context, e.toString());
-                    }
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Continue an Admin",
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                        value: isChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (!isChecked) {
+                              isChecked = true;
+                            } else {
+                              isChecked = false;
+                            }
+                          });
+                        }),
+                  ],
                 ),
+                Mybutton(
+                    text: "Sign Up",
+                    ontap: () async {
+                      try {
+                        if (!isChecked) {
+                          await _authServices.signUpWithEmailAndPassword(
+                              emailController.text,
+                              passController.text,
+                              nameController.text,
+                              isChecked,
+                              isVerified,);
+                          scaffoldMessage.message(
+                            context,
+                            "Registered Successfully!!!",
+                            Colors.green,
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BottomNavbar()),
+                          );
+                        } else {
+                          await _authServices.signUpWithEmailAndPassword(
+                              emailController.text,
+                              passController.text,
+                              nameController.text,
+                              isChecked,
+                              isVerified);
+                          scaffoldMessage.message(
+                            context,
+                            "Registered Successfully!!!",
+                            Colors.green,
+                          );
+                        }
+                      } on Exception catch (e) {
+                        showErrorDialogBox(context, e.toString());
+                      }
+                    }),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -119,7 +159,6 @@ class _SignupPageState extends State<SignupPage> {
                       "Already have an Account? ",
                       style: TextStyle(color: Colors.black),
                     ),
-
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
