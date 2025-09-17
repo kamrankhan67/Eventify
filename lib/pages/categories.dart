@@ -20,6 +20,7 @@ class _CategoriesState extends State<Categories> {
   Stream<QuerySnapshot>? festivalEvents;
   Stream<QuerySnapshot>? clothingEvents;
   Stream<QuerySnapshot>? allEventStream;
+  Stream<QuerySnapshot>? tournamentsStream;
   final imageStorage = ImageStorage();
 
   onTheLoad() async {

@@ -285,17 +285,18 @@ class _HomePageState extends State<HomePage> {
                       _buildCategory(
                         context,
                         "images/clothes.png",
-                        "110",
+                        "140",
                         "65",
-                        "Clothing",
+                        "Tournaments",
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                Categories(eventName: "Clothing"),
+                                Categories(eventName: "Tounaments"),
                           ),
                         ),
                       ),
+                      
                       const SizedBox(width: 30),
                       _buildCategory(
                         context,
@@ -309,6 +310,21 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                             builder: (context) =>
                                 Categories(eventName: "Festivals"),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 30),
+                      _buildCategory(
+                        context,
+                        "images/clothes.png",
+                        "110",
+                        "65",
+                        "Clothing",
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                Categories(eventName: "Clothing"),
                           ),
                         ),
                       ),
