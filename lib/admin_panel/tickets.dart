@@ -117,7 +117,7 @@ class _TicketsState extends State<Tickets> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "${(double.parse(ds['Booked_Tickets'])) * (double.parse(ds['Price']))} \$",
+                      "${(int.parse(ds['Booked_Tickets'])) * (int.parse(ds['Price']))} \$",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )
                   ]),
